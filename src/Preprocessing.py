@@ -65,7 +65,7 @@ print ('Converting to Pandas DataFrame')
 X = callsData.to_dataframe()
 
 print ('Replacing categorical values to IDs using Pandas')
-
+strCols.remove('DATE')
 for c in strCols:
     X[c]= (X[c].astype('category')).cat.codes
 
