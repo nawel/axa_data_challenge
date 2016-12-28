@@ -54,7 +54,10 @@ date_col=callsData['DATE'].apply(lambda x: dt.datetime.strptime(x, '%Y-%m-%d %H:
 splitted_date_col=date_col.split_datetime(column_name_prefix='', limit=['year', 'month', 'day', 'hour', 'minute'])
 for col in ['year', 'month', 'day', 'hour', 'minute']:
     callsData[col] = splitted_date_col[col]
-    
+
+print('Remove column DATE...')
+callsData.remove_column('DATE')
+
 print('Changing day label column into numerical in the right order (Monday=0,Thuesday=1,...)..')   
 callsData['DAY_WE_DS'] = date_col.apply(lambda x: x.weekday())
 
