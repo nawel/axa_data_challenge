@@ -5,6 +5,7 @@ from sklearn.decomposition import PCA
 import pickle
 import pandas as pd
 import os
+import datetime as dt
 
 print ('Loading the data ..')
 url = '/home/fichette/Documents/PROJETS/AXA/train_2011_2012_2013.csv'
@@ -47,6 +48,15 @@ for c in strCols :
         transformed_sf = imputer_str.fit_transform(callsData)
         newc = 'predicted_feature_' + c
         callsData[c] = transformed_sf[newc]
+
+print('Splitting column DATE into columns year, month, day, hour, minute..')      
+date_col=callsData['DATE'].apply(lambda x: dt.datetime.strptime(x, '%Y-%m-%d %H:%M:%S.000'))
+splitted_date_col=date_col.split_datetime(column_name_prefix='', limit=['year', 'month', 'day', 'hour', 'minute'])
+for col in ['year', 'month', 'day', 'hour']:
+    callsData[col] = splitted_date_col[col]
+    
+print('Changing day label column into numerical in the right order (Monday=0,Thuesday=1,...)..')   
+callsData['DAY_WE_DS'] = date_col.apply(lambda x: x.weekday())
 
 print ('Converting to Pandas DataFrame')
 X = callsData.to_dataframe()
