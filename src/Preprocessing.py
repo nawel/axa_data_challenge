@@ -11,7 +11,7 @@ print ('Loading the data ..')
 url = '/home/fichette/Documents/PROJETS/AXA/train_2011_2012_2013.csv'
 #Read only some columns: the green ones in the sheet (see drive)
 callsData = gl.SFrame.read_csv(url, delimiter=';', header=True,
-                               usecols=['DATE','DAY_OFF','WEEK_END','DAY_WE_DS','TPER_TEAM','TPER_HOUR',
+                               usecols=['DATE','DAY_OFF','WEEK_END','DAY_WE_DS','TPER_TEAM',
                                         'ASS_ASSIGNMENT','ASS_DIRECTORSHIP','ASS_PARTNER','ASS_POLE',
                                         'CSPL_CALLSOFFERED' , 'CSPL_NOANSREDIR','CSPL_ACDCALLS','CSPL_ABNCALLS',
                                         'CSPL_DISCCALLS','CSPL_MAXINQUEUE','CSPL_DEQUECALLS', 
