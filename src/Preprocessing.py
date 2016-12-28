@@ -52,7 +52,7 @@ for c in strCols :
 print('Splitting column DATE into columns year, month, day, hour, minute..')      
 date_col=callsData['DATE'].apply(lambda x: dt.datetime.strptime(x, '%Y-%m-%d %H:%M:%S.000'))
 splitted_date_col=date_col.split_datetime(column_name_prefix='', limit=['year', 'month', 'day', 'hour', 'minute'])
-for col in ['year', 'month', 'day', 'hour']:
+for col in ['year', 'month', 'day', 'hour', 'minute']:
     callsData[col] = splitted_date_col[col]
     
 print('Changing day label column into numerical in the right order (Monday=0,Thuesday=1,...)..')   
