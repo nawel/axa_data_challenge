@@ -34,7 +34,7 @@ print ("End.")
 ####Load the data  to train
 print ("Loading data train...")
 y_df=data['CSPL_RECEIVED_CALLS'][:300000]
-X_df=data[  ['WEEK_END',  'DAY_WE_DS',  'TPER_TEAM',  'ASS_ASSIGNMENT',  'ASS_DIRECTORSHIP','ASS_PARTNER']][:300000]
+X_df=data[  ['WEEK_END',  'DAY_WE_DS',  'TPER_TEAM',  'ASS_ASSIGNMENT',  'ASS_DIRECTORSHIP','ASS_PARTNER','year','month','day','hour','minute']][:300000]
 print ("End.")
 
 
