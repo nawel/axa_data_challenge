@@ -8,10 +8,10 @@ import os
 import datetime as dt
 
 print ('Loading the data ..')
-url = '/home/fichette/Documents/PROJETS/AXA/train_2011_2012_2013.csv'
+url = '../../../train_2011_2012_2013.csv'
 #Read only some columns: the green ones in the sheet (see drive)
 callsData = gl.SFrame.read_csv(url, delimiter=';', header=True,
-                               usecols=['DATE','DAY_OFF','WEEK_END','DAY_WE_DS','TPER_TEAM',
+                               usecols=['DATE','WEEK_END','DAY_WE_DS','TPER_TEAM',
                                         'ASS_ASSIGNMENT','ASS_DIRECTORSHIP','ASS_PARTNER','ASS_POLE',
                                         'CSPL_CALLSOFFERED' , 'CSPL_NOANSREDIR','CSPL_ACDCALLS','CSPL_ABNCALLS',
                                         'CSPL_DISCCALLS','CSPL_MAXINQUEUE','CSPL_DEQUECALLS', 
@@ -61,21 +61,44 @@ callsData.remove_column('DATE')
 print('Changing day label column into numerical in the right order (Monday=0,Thuesday=1,...)..')   
 callsData['DAY_WE_DS'] = date_col.apply(lambda x: x.weekday())
 
+print "Transform the categories : ASS_ASSIGNMENT to ID..."
+ass=callsData['ASS_ASSIGNMENT'].unique()
+ass_numpy=ass.to_numpy()
+callsData['cod_ASS_ASSIGNMENT']=callsData['ASS_ASSIGNMENT'].apply(lambda x: np.where(ass_numpy==x)[0][0])
+
+   
 print ('Converting to Pandas DataFrame')
 X = callsData.to_dataframe()
 
-print ('Replacing categorical values to IDs using Pandas')
+
+
+print ('Replacing other categorical values to IDs using Pandas')
 strCols.remove('DATE')
+strCols.remove('ASS_ASSIGNMENT')
 for c in strCols:
     X[c]= (X[c].astype('category')).cat.codes
 
 pickle.dump(X, open(os.getcwd()+"/callsData_DataFrame.obj", "wb"))
 
-print ('Applying PCA...')
+print("Handling test data")
 
-pca = PCA(n_components=10)
-pca.fit(X)
-print('PCA Results: ')
-print (pca.explained_variance_ratio_) 
-pickle.dump(pca, open(os.getcwd()+"/PCA.obj", "wb"))
+test=gl.SFrame.read_csv('../submission.txt', delimiter='\t', verbose=False)
+test=test['DATE' , 'ASS_ASSIGNMENT']
+date_col=test['DATE'].apply(lambda x: dt.datetime.strptime(x, '%Y-%m-%d %H:%M:%S.000'))
+splitted_date_col=date_col.split_datetime(column_name_prefix='', limit=['year', 'month', 'day', 'hour', 'minute'])
+for col in ['year', 'month', 'day', 'hour', 'minute']:
+    test[col] = splitted_date_col[col]
+test['DAY_WE_DS'] = date_col.apply(lambda x: x.weekday())
+test['cod_ASS_ASSIGNMENT']=test['ASS_ASSIGNMENT'].apply(lambda x: np.where(ass_numpy==x)[0][0])
+
+Y = test.to_dataframe()
+pickle.dump(Y, open(os.getcwd()+"/test_DataFrame.obj", "wb"))
+
+#print ('Applying PCA...')
+
+#pca = PCA(n_components=10)
+#pca.fit(X)
+#print('PCA Results: ')
+#print (pca.explained_variance_ratio_) 
+#pickle.dump(pca, open(os.getcwd()+"/PCA.obj", "wb"))
 
