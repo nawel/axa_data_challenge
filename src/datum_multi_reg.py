@@ -63,6 +63,7 @@ while l<len(set_X_test):
 
 #on réassemble les valeurs de prédiction
 resultPred= pd.concat(set_X_test,  ignore_index=True)
+resultPred=resultPred.sort_index()
 
 def make_submission(test, prediction, filename='/Users/ozad/Desktop/axa_data_challenge-master/submission.txt'):
 	"""
