@@ -107,11 +107,16 @@ for i_date in range(len(dates_a_predire)):
 	resultPred=resultPred.sort_index()
 	incremental_prediction.append(resultPred)
 
+print("Merging incremental learning...")
 resultPred_final=pd.concat(incremental_prediction)
 resultPred_final=resultPred_final.sort_values(by=['DATE', 'cod_ASS_ASSIGNMENT'])
 
+print("Make every prediction positif, ceil it ...")
 resultPred_final['CSPL_RECEIVED_CALLS']=resultPred_final['CSPL_RECEIVED_CALLS'].apply(lambda x: x*(x>0))
 #resultPred_final['CSPL_RECEIVED_CALLS']=resultPred_final['CSPL_RECEIVED_CALLS'].apply(lambda x: 2.5*x)
 resultPred_final['CSPL_RECEIVED_CALLS']=resultPred_final['CSPL_RECEIVED_CALLS'].apply(lambda x: math.ceil(x))
 
+print "Write the submission ..."
 make_submission(dataTest,resultPred_final)
+print "End."
+
